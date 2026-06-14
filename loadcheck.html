@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#14161B" />
+<title>LoadCheck — free load-profit check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14161B; --panel:#1C1F26; --edge:#2A2E37; --ink:#ECEAE3;
+    --muted:#8A909C; --faint:#5A606C; --amber:#F2B33D; --green:#5BE58A;
+    --red:#F0563E; --field:#0F1115;
+    --mono:'Roboto Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --ui:'Archivo',system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;}
+  body{background:var(--bg);min-height:100vh;font-family:var(--ui);padding:20px 14px 40px;}
+  .wrap{max-width:440px;margin:0 auto;}
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  input[type=number]{-moz-appearance:textfield;}
+
+  .brandbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+  .brand{display:flex;align-items:center;gap:9px;}
+  .dot{width:11px;height:11px;border-radius:3px;background:var(--amber);box-shadow:0 0 12px var(--amber);}
+  .brandname{font-weight:800;letter-spacing:.04em;color:var(--ink);font-size:17px;}
+  .freetag{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--faint);text-transform:uppercase;}
+
+  h1{font-weight:700;color:var(--ink);font-size:26px;line-height:1.15;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 22px;line-height:1.4;}
+
+  .grid{display:grid;gap:14px;margin-bottom:14px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  label.f{display:block;}
+  .flabel{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+  .flabel span.l{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+  .flabel span.h{font-size:11px;color:var(--faint);}
+  .fbox{display:flex;align-items:center;background:var(--field);border:1px solid var(--edge);border-radius:10px;padding:0 14px;height:56px;}
+  .fbox span.pre{font-family:var(--mono);color:var(--muted);font-size:18px;margin-right:4px;}
+  .fbox span.suf{font-family:var(--mono);color:var(--muted);font-size:15px;margin-left:4px;}
+  .fbox input{flex:1;width:100%;min-width:0;background:transparent;border:none;outline:none;color:var(--ink);font-family:var(--mono);font-size:22px;font-weight:500;}
+
+  .costtoggle{width:100%;background:transparent;border:none;padding:4px 2px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:var(--ui);}
+  .costtoggle .lhs{font-size:12.5px;color:var(--muted);}
+  .costtoggle .lhs b{color:var(--ink);font-family:var(--mono);font-weight:500;}
+  .costtoggle .lhs i{color:var(--faint);font-style:normal;}
+  .costtoggle .rhs{color:var(--amber);font-size:12.5px;font-weight:600;}
+  #costpanel{display:none;margin-bottom:16px;margin-top:-4px;}
+  #costpanel.open{display:block;}
+  #costpanel .note{font-size:11.5px;color:var(--faint);margin:8px 2px 0;line-height:1.4;}
+
+  .card{background:var(--panel);border:1px solid var(--edge);border-radius:16px;overflow:hidden;margin-top:8px;}
+  .verdicttop{padding:22px 20px 18px;text-align:center;border-bottom:1px solid var(--edge);}
+  .pill{display:inline-block;font-weight:800;font-size:13px;letter-spacing:.12em;color:var(--bg);padding:5px 14px;border-radius:999px;margin-bottom:16px;}
+  .bignum{font-family:var(--mono);font-weight:600;font-size:56px;line-height:1;transition:color .25s ease;letter-spacing:-.02em;}
+  .bignum-sub{font-size:13px;color:var(--muted);margin-top:8px;letter-spacing:.04em;}
+  .bignum-sub b{color:var(--ink);font-family:var(--mono);font-weight:500;}
+
+  .reveal{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--edge);}
+  .reveal .cap{font-size:11.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;}
+  .reveal .brokerval{font-family:var(--mono);font-size:20px;color:var(--muted);text-decoration:line-through;text-decoration-color:var(--faint);}
+  .reveal .arrow{color:var(--faint);font-size:20px;}
+  .reveal .keepval{font-family:var(--mono);font-size:20px;font-weight:600;}
+  .reveal .right{text-align:right;}
+
+  .breakdown{padding:16px 20px;display:grid;gap:9px;}
+  .brow{display:flex;justify-content:space-between;}
+  .brow .k{font-size:13.5px;color:var(--muted);}
+  .brow .v{font-family:var(--mono);font-size:14px;color:var(--ink);}
+
+  .empty{background:var(--panel);border:1px dashed var(--edge);border-radius:16px;padding:34px 20px;text-align:center;color:var(--faint);font-size:14px;}
+
+  .hook{margin-top:16px;background:rgba(242,179,61,.07);border:1px solid rgba(242,179,61,.25);border-radius:14px;padding:16px 18px;}
+  .hook .ht{font-weight:700;color:var(--amber);font-size:14px;margin-bottom:5px;}
+  .hook p{color:var(--muted);font-size:13px;line-height:1.5;margin:0;}
+
+  .foot{color:var(--faint);font-size:11px;text-align:center;margin-top:22px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brandbar">
+    <div class="brand"><div class="dot"></div><span class="brandname">LOADCHECK</span></div>
+    <span class="freetag">Free</span>
+  </div>
+
+  <h1>Does this load actually pay?</h1>
+  <p class="sub">Type the load, see what you really clear after fuel and the empty miles.</p>
+
+  <div class="grid">
+    <label class="f">
+      <div class="flabel"><span class="l">Load pays</span></div>
+      <div class="fbox"><span class="pre">$</span><input id="rate" type="number" inputmode="decimal" value="2400"></div>
+    </label>
+    <div class="row2">
+      <label class="f">
+        <div class="flabel"><span class="l">Loaded miles</span></div>
+        <div class="fbox"><input id="loaded" type="number" inputmode="decimal" value="1200"></div>
+      </label>
+      <label class="f">
+        <div class="flabel"><span class="l">Deadhead miles</span><span class="h">empty to pickup</span></div>
+        <div class="fbox"><input id="deadhead" type="number" inputmode="decimal" value="150"></div>
+      </label>
+    </div>
+    <div class="row2">
+      <label class="f">
+        <div class="flabel"><span class="l">Diesel</span></div>
+        <div class="fbox"><span class="pre">$</span><input id="diesel" type="number" inputmode="decimal" value="5.00"><span class="suf">/gal</span></div>
+      </label>
+      <label class="f">
+        <div class="flabel"><span class="l">Your truck</span></div>
+        <div class="fbox"><input id="mpg" type="number" inputmode="decimal" value="6.5"><span class="suf">mpg</span></div>
+      </label>
+    </div>
+  </div>
+
+  <button class="costtoggle" id="costtoggle">
+    <span class="lhs">Other costs: <b id="othercpm-label">$0.90/mi</b> <i>(estimated)</i></span>
+    <span class="rhs" id="costtoggle-action">adjust</span>
+  </button>
+  <div id="costpanel">
+    <label class="f">
+      <div class="flabel"><span class="l">Truck pmt + insurance + maintenance</span></div>
+      <div class="fbox"><span class="pre">$</span><input id="othercpm" type="number" inputmode="decimal" step="0.05" value="0.90"><span class="suf">/mi</span></div>
+    </label>
+    <p class="note">A rough guess for a small carrier. Your real number is different — that's what the full version pulls from your fuel card and settlements.</p>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="hook">
+    <div class="ht">This is using a guess for your costs.</div>
+    <p>The full version reads your real numbers straight from your fuel card and settlements — then tracks every broker and lane over time, so you can see which ones quietly lose you money.</p>
+  </div>
+
+  <p class="foot">Nothing you type leaves this screen. No login, no account.</p>
+</div>
+
+<script>
+  var $ = function(id){ return document.getElementById(id); };
+  var num = function(v){ var f = parseFloat(v); return (v === "" || isNaN(f)) ? 0 : f; };
+
+  var fmtMoney = function(n){
+    return n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0});
+  };
+  var fmtRPM = function(n){
+    return (n < 0 ? "-$" : "$") + Math.abs(n).toFixed(2);
+  };
+
+  function compute(){
+    var R = num($("rate").value),
+        L = num($("loaded").value),
+        D = num($("deadhead").value),
+        F = num($("diesel").value),
+        M = num($("mpg").value) || 6.5,
+        O = num($("othercpm").value);
+
+    $("othercpm-label").textContent = "$" + O.toFixed(2) + "/mi";
+
+    var total = L + D;
+    if (R <= 0 || total <= 0) return null;
+
+    var gallons = total / M;
+    var fuelCost = gallons * F;
+    var otherCost = O * total;
+    var totalCost = fuelCost + otherCost;
+    var netProfit = R - totalCost;
+    var ppm = netProfit / total;
+    var headline = L > 0 ? R / L : 0;
+
+    var color = "var(--amber)", label = "THIN MARGIN";
+    if (ppm >= 0.5){ color = "var(--green)"; label = "TAKE IT"; }
+    else if (ppm < 0){ color = "var(--red)"; label = "SKIP IT"; }
+
+    return {total:total,gallons:gallons,fuelCost:fuelCost,otherCost:otherCost,
+            netProfit:netProfit,ppm:ppm,headline:headline,color:color,label:label};
+  }
+
+  function render(){
+    var c = compute();
+    var el = $("result");
+    if (!c){
+      el.innerHTML = '<div class="empty">Enter a rate and miles to see the verdict.</div>';
+      return;
+    }
+    var shadow = c.color.replace("var(--","").replace(")","");
+    el.innerHTML =
+      '<div class="card">' +
+        '<div class="verdicttop">' +
+          '<div class="pill" style="background:'+c.color+';box-shadow:0 0 24px '+c.color+';">'+c.label+'</div>' +
+          '<div class="bignum" style="color:'+c.color+';">'+fmtRPM(c.ppm)+'</div>' +
+          '<div class="bignum-sub">real profit per mile · <b>'+fmtMoney(c.netProfit)+'</b> on the load</div>' +
+        '</div>' +
+        '<div class="reveal">' +
+          '<div><div class="cap">Broker calls it</div><div class="brokerval">'+fmtRPM(c.headline)+'/mi</div></div>' +
+          '<span class="arrow">&rarr;</span>' +
+          '<div class="right"><div class="cap">You keep</div><div class="keepval" style="color:'+c.color+';">'+fmtRPM(c.ppm)+'/mi</div></div>' +
+        '</div>' +
+        '<div class="breakdown">' +
+          '<div class="brow"><span class="k">Total miles driven</span><span class="v">'+c.total.toLocaleString()+' mi</span></div>' +
+          '<div class="brow"><span class="k">Fuel burned</span><span class="v">'+fmtMoney(c.fuelCost)+' ('+c.gallons.toFixed(0)+' gal)</span></div>' +
+          '<div class="brow"><span class="k">Other costs</span><span class="v">'+fmtMoney(c.otherCost)+'</span></div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // wire up live updates
+  ["rate","loaded","deadhead","diesel","mpg","othercpm"].forEach(function(id){
+    $(id).addEventListener("input", render);
+  });
+
+  // collapsible costs
+  $("costtoggle").addEventListener("click", function(){
+    var p = $("costpanel");
+    var open = p.classList.toggle("open");
+    $("costtoggle-action").textContent = open ? "hide" : "adjust";
+  });
+
+  render();
+</script>
+</body>
+</html>
