@@ -30,9 +30,8 @@
   .brandname{font-weight:800;letter-spacing:.04em;color:var(--ink);font-size:17px;}
   .freetag{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--faint);text-transform:uppercase;}
 
-  /* tabs */
   .tabs{display:flex;gap:6px;background:var(--field);border:1px solid var(--edge);border-radius:12px;padding:4px;margin-bottom:20px;}
-  .tab{flex:1;border:none;background:transparent;color:var(--muted);font-family:var(--ui);font-weight:700;font-size:13.5px;letter-spacing:.02em;padding:11px 8px;border-radius:9px;cursor:pointer;transition:background .18s ease,color .18s ease;}
+  .tab{flex:1;border:none;background:transparent;color:var(--muted);font-family:var(--ui);font-weight:700;font-size:13px;letter-spacing:.01em;padding:11px 6px;border-radius:9px;cursor:pointer;transition:background .18s ease,color .18s ease;}
   .tab[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 1px var(--edge);}
 
   h1{font-weight:700;color:var(--ink);font-size:25px;line-height:1.15;margin:0 0 4px;}
@@ -56,7 +55,6 @@
   .panel{display:none;}
   .panel.active{display:block;}
 
-  /* cost summary hero */
   .cpmhero{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:20px;margin-bottom:18px;}
   .cpmhero .cap{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);text-align:center;}
   .cpmhero .big{font-family:var(--mono);font-weight:600;font-size:52px;line-height:1;color:var(--amber);text-align:center;margin:6px 0 4px;letter-spacing:-.02em;}
@@ -68,7 +66,6 @@
 
   .seclabel{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:6px 2px 10px;}
 
-  /* cost rows */
   #items{display:grid;gap:9px;margin-bottom:12px;}
   .itemgrid{display:grid;grid-template-columns:1fr 80px 104px 28px;gap:8px;align-items:center;}
   .itemgrid .namebox,.itemgrid .amtbox{background:var(--field);border:1px solid var(--edge);border-radius:10px;height:50px;display:flex;align-items:center;padding:0 11px;}
@@ -78,13 +75,12 @@
   .itemgrid select{width:100%;height:50px;background-color:var(--field);border:1px solid var(--edge);border-radius:10px;color:var(--muted);font-family:var(--mono);font-size:12.5px;padding:0 24px 0 10px;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A909C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;}
   .del{background:transparent;border:none;color:var(--faint);font-size:20px;cursor:pointer;line-height:1;padding:6px;border-radius:8px;}
   .del:hover{color:var(--red);}
-  .addbtn{width:100%;background:var(--amber);border:1px dashed var(--edge);border-radius:10px;color:white;font-family:var(--ui);font-weight:600;font-size:13.5px;padding:13px;cursor:pointer;}
+  .addbtn{width:100%;background:transparent;border:1px dashed var(--edge);border-radius:10px;color:var(--amber);font-family:var(--ui);font-weight:600;font-size:13.5px;padding:13px;cursor:pointer;}
   .addbtn:hover{border-color:var(--amber);}
 
   .ops{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:14px;margin-bottom:18px;}
   .ops .opslabel{font-size:11.5px;color:var(--muted);margin-bottom:10px;}
 
-  /* load check (kept) */
   .costline{width:100%;background:var(--field);border:1px solid var(--edge);border-radius:10px;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;cursor:pointer;}
   .costline .lhs{font-size:12.5px;color:var(--muted);}
   .costline .lhs b{color:var(--ink);font-family:var(--mono);font-weight:500;}
@@ -106,7 +102,26 @@
   .brow{display:flex;justify-content:space-between;}
   .brow .k{font-size:13.5px;color:var(--muted);}
   .brow .v{font-family:var(--mono);font-size:14px;color:var(--ink);}
-  .empty{background:var(--panel);border:1px dashed var(--edge);border-radius:16px;padding:34px 20px;text-align:center;color:var(--faint);font-size:14px;}
+  .empty{background:var(--panel);border:1px dashed var(--edge);border-radius:16px;padding:34px 20px;text-align:center;color:var(--faint);font-size:14px;line-height:1.5;}
+
+  .savebar{display:none;gap:10px;align-items:center;margin-top:12px;}
+  .savebar input{flex:1;min-width:0;background:var(--field);border:1px solid var(--edge);border-radius:10px;height:48px;padding:0 13px;color:var(--ink);font-family:var(--ui);font-size:13.5px;outline:none;}
+  .savebar button{height:48px;padding:0 17px;background:rgba(242,179,61,.12);border:1px solid var(--amber);color:var(--amber);border-radius:10px;font-family:var(--ui);font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap;transition:opacity .18s ease;}
+  .savebar button:disabled{opacity:.55;cursor:default;}
+
+  .ssum{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px;margin-bottom:16px;}
+  .ssum .scount{font-size:13px;color:var(--muted);text-align:center;margin-bottom:14px;}
+  .ssum .scount b{color:var(--ink);font-family:var(--mono);}
+  #saved-list{display:grid;gap:9px;}
+  .srow{display:grid;grid-template-columns:auto 1fr auto auto;gap:11px;align-items:center;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:13px 14px;}
+  .srow .sdot{width:9px;height:9px;border-radius:3px;}
+  .srow .slabel{font-size:14px;color:var(--ink);font-weight:600;line-height:1.2;}
+  .srow .sdate{font-size:11px;color:var(--faint);margin-top:3px;font-family:var(--mono);}
+  .srow .sright{text-align:right;}
+  .srow .sppm{font-family:var(--mono);font-size:15px;font-weight:600;}
+  .srow .sprofit{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .srow .sdel{background:transparent;border:none;color:var(--faint);font-size:19px;cursor:pointer;line-height:1;padding:4px;border-radius:7px;}
+  .srow .sdel:hover{color:var(--red);}
 
   .foot{color:var(--faint);font-size:11px;text-align:center;margin-top:22px;line-height:1.5;}
 </style>
@@ -121,6 +136,7 @@
   <div class="tabs" role="tablist">
     <button class="tab" id="tab-load" role="tab" aria-selected="true" aria-controls="panel-load">Load check</button>
     <button class="tab" id="tab-cost" role="tab" aria-selected="false" aria-controls="panel-cost">My costs</button>
+    <button class="tab" id="tab-saved" role="tab" aria-selected="false" aria-controls="panel-saved">Saved</button>
   </div>
 
   <!-- ============ LOAD CHECK ============ -->
@@ -161,6 +177,12 @@
     </div>
 
     <div id="result"></div>
+
+    <div class="savebar" id="savebar">
+      <input id="savelabel" type="text" placeholder="Label it (e.g. Dallas &rarr; Memphis)" aria-label="Load label">
+      <button id="savebtn">Save load</button>
+    </div>
+
     <p class="foot">Nothing you type leaves this device. No login, no account.</p>
   </section>
 
@@ -204,6 +226,15 @@
 
     <p class="foot">Fuel isn't here — it's counted per load on the Load check tab.<br>Saved on this device only. Nothing leaves your phone.</p>
   </section>
+
+  <!-- ============ SAVED ============ -->
+  <section class="panel" id="panel-saved" role="tabpanel" aria-labelledby="tab-saved">
+    <h1>Loads you've logged</h1>
+    <p class="sub">Every load you save adds up here — so you can see what you actually cleared over time.</p>
+    <div id="saved-summary"></div>
+    <div id="saved-list"></div>
+    <p class="foot">Saved on this device only. Nothing leaves your phone.</p>
+  </section>
 </div>
 
 <script>
@@ -212,6 +243,7 @@
   var num = function(v){ var f = parseFloat(v); return (v==="" || isNaN(f)) ? 0 : f; };
   var fmtMoney = function(n){ return n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}); };
   var fmtRPM = function(n){ return (n<0?"-$":"$") + Math.abs(n).toFixed(2); };
+  var escapeHtml = function(s){ return String(s).replace(/[&<>"']/g, function(ch){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]; }); };
 
   var CADENCES = [
     {v:"mi",  t:"per mile"},
@@ -225,12 +257,18 @@
   var DEFAULTS = {
     ops:{miles:2500, days:5, loads:3},
     items:[
-      {name:"Truck payment",            amount:2200, cad:"mo"},
+      {name:"Truck payment",             amount:2200, cad:"mo"},
+      {name:"Insurance",                 amount:1200, cad:"mo"},
+      {name:"Maintenance & repairs",     amount:0.15, cad:"mi"},
+      {name:"Permits, IFTA & tolls",     amount:120,  cad:"wk"},
+      {name:"Phone, ELD & subscriptions",amount:150,  cad:"mo"},
     ],
-    load:{rate:2400, loaded:1200, deadhead:150, diesel:5.00, mpg:6.5}
+    load:{rate:2400, loaded:1200, deadhead:150, diesel:5.00, mpg:6.5},
+    saved:[]
   };
 
   var state = loadState() || JSON.parse(JSON.stringify(DEFAULTS));
+  if(!state.saved) state.saved = [];
 
   function loadState(){
     try{ var s = localStorage.getItem("loadcheck_v2"); return s ? JSON.parse(s) : null; }
@@ -260,7 +298,7 @@
     return {cpm:cpm, weekly:weekly, monthly:weekly*52/12, annual:weekly*52, ops:ops};
   }
 
-  // ---- render cost rows ----
+  // ---- cost rows ----
   function renderItems(){
     var box = $("items");
     box.innerHTML = "";
@@ -301,7 +339,6 @@
     $("r-week").textContent  = fmtMoney(c.weekly);
     $("r-month").textContent = fmtMoney(c.monthly);
     $("r-year").textContent  = fmtMoney(c.annual);
-    // feed load check
     $("othercpm-label").textContent = fmtRPM(c.cpm) + "/mi";
     $("costsource").textContent = state.items.length ? "(your real number)" : "(add your costs)";
   }
@@ -322,7 +359,11 @@
   }
   function renderLoad(){
     var c = computeLoad(), el = $("result");
-    if(!c){ el.innerHTML = '<div class="empty">Enter a rate and miles to see the verdict.</div>'; return; }
+    if(!c){
+      el.innerHTML = '<div class="empty">Enter a rate and miles to see the verdict.</div>';
+      $("savebar").style.display = "none";
+      return;
+    }
     el.innerHTML =
       '<div class="card">'+
         '<div class="verdicttop">'+
@@ -341,13 +382,79 @@
           '<div class="brow"><span class="k">Your other costs</span><span class="v">'+fmtMoney(c.otherCost)+'</span></div>'+
         '</div>'+
       '</div>';
+    $("savebar").style.display = "flex";
+  }
+
+  // ---- saved loads ----
+  function saveLoad(){
+    var c = computeLoad(); if(!c) return;
+    state.saved.push({
+      ts: Date.now(),
+      label: $("savelabel").value,
+      rate: num($("rate").value),
+      total: c.total,
+      ppm: c.ppm,
+      netProfit: c.netProfit,
+      color: c.color,
+      verdict: c.label
+    });
+    saveState();
+    $("savelabel").value = "";
+    var b = $("savebtn");
+    b.textContent = "Saved \u2713"; b.disabled = true;
+    setTimeout(function(){ b.textContent = "Save load"; b.disabled = false; }, 1300);
+    renderSaved();
+  }
+
+  function renderSaved(){
+    var sum = $("saved-summary"), list = $("saved-list");
+    if(!state.saved.length){
+      sum.innerHTML = "";
+      list.innerHTML = '<div class="empty">No saved loads yet.<br>Run a load check and tap &ldquo;Save load.&rdquo;</div>';
+      return;
+    }
+    var miles=0, profit=0;
+    state.saved.forEach(function(s){ miles += s.total; profit += s.netProfit; });
+    var avg = miles>0 ? profit/miles : 0;
+    var avgColor = avg>=0.5 ? "var(--green)" : (avg<0 ? "var(--red)" : "var(--amber)");
+    sum.innerHTML =
+      '<div class="ssum">'+
+        '<div class="scount"><b>'+state.saved.length+'</b> load'+(state.saved.length>1?'s':'')+' logged</div>'+
+        '<div class="rollup">'+
+          '<div class="chip"><div class="ck">Total miles</div><div class="cv">'+Math.round(miles).toLocaleString()+'</div></div>'+
+          '<div class="chip"><div class="ck">Total cleared</div><div class="cv">'+fmtMoney(profit)+'</div></div>'+
+          '<div class="chip"><div class="ck">Avg $/mi</div><div class="cv" style="color:'+avgColor+';">'+fmtRPM(avg)+'</div></div>'+
+        '</div>'+
+      '</div>';
+
+    var html = "";
+    for(var i=state.saved.length-1; i>=0; i--){
+      var s = state.saved[i];
+      var d = new Date(s.ts);
+      var dateStr = (d.getMonth()+1)+"/"+d.getDate();
+      var name = (s.label && s.label.trim()) ? escapeHtml(s.label) : (fmtMoney(s.rate)+" load");
+      html +=
+        '<div class="srow">'+
+          '<span class="sdot" style="background:'+s.color+';box-shadow:0 0 8px '+s.color+';"></span>'+
+          '<div><div class="slabel">'+name+'</div><div class="sdate">'+dateStr+' · '+Math.round(s.total).toLocaleString()+' mi</div></div>'+
+          '<div class="sright"><div class="sppm" style="color:'+s.color+';">'+fmtRPM(s.ppm)+'/mi</div><div class="sprofit">'+fmtMoney(s.netProfit)+'</div></div>'+
+          '<button class="sdel" data-i="'+i+'" aria-label="Delete load">&times;</button>'+
+        '</div>';
+    }
+    list.innerHTML = html;
+    Array.prototype.forEach.call(list.querySelectorAll(".sdel"), function(b){
+      b.addEventListener("click", function(){
+        var idx = parseInt(b.getAttribute("data-i"),10);
+        state.saved.splice(idx,1); saveState(); renderSaved();
+      });
+    });
   }
 
   function recompute(){ renderCostSummary(); renderLoad(); }
 
   // ---- wire up ----
   ["rate","loaded","deadhead","diesel","mpg"].forEach(function(id){
-    $(id).value = state.load[id]; 
+    $(id).value = state.load[id];
     $(id).addEventListener("input", function(){ state.load[id]=$(id).value; renderLoad(); saveState(); });
   });
   $("op-miles").value = state.ops.miles; $("op-days").value = state.ops.days; $("op-loads").value = state.ops.loads;
@@ -358,22 +465,24 @@
   $("addbtn").addEventListener("click", function(){
     state.items.push({name:"", amount:0, cad:"mo"}); renderItems(); recompute(); saveState();
   });
+  $("savebtn").addEventListener("click", saveLoad);
 
   // tabs
   function selectTab(which){
-    var loadSel = which==="load";
-    $("tab-load").setAttribute("aria-selected", loadSel);
-    $("tab-cost").setAttribute("aria-selected", !loadSel);
-    $("panel-load").classList.toggle("active", loadSel);
-    $("panel-cost").classList.toggle("active", !loadSel);
+    ["load","cost","saved"].forEach(function(k){
+      $("tab-"+k).setAttribute("aria-selected", k===which);
+      $("panel-"+k).classList.toggle("active", k===which);
+    });
   }
   $("tab-load").addEventListener("click", function(){ selectTab("load"); });
   $("tab-cost").addEventListener("click", function(){ selectTab("cost"); });
+  $("tab-saved").addEventListener("click", function(){ selectTab("saved"); });
   $("costline").addEventListener("click", function(){ selectTab("cost"); });
   $("costline").addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); selectTab("cost"); } });
 
   renderItems();
   recompute();
+  renderSaved();
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "758442c7e1b7428b8f25f06207a6ddc8"}'></script><!-- End Cloudflare Web Analytics -->
