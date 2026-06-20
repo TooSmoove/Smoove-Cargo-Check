@@ -123,6 +123,13 @@
   .srow .sdel{background:transparent;border:none;color:var(--faint);font-size:19px;cursor:pointer;line-height:1;padding:4px;border-radius:7px;}
   .srow .sdel:hover{color:var(--red);}
 
+  .hintbar{display:flex;align-items:flex-start;gap:10px;background:rgba(242,179,61,.08);border:1px solid rgba(242,179,61,.28);border-radius:12px;padding:12px 14px;margin-bottom:18px;}
+  .hintbar span{font-size:12.5px;color:var(--muted);line-height:1.45;}
+  .hintbar b{color:var(--amber);font-weight:600;}
+  .hintbar #hint-link{cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+  .hintbar .hintx{background:transparent;border:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;padding:0 2px;flex-shrink:0;}
+  .hintbar .hintx:hover{color:var(--ink);}
+
   .foot{color:var(--faint);font-size:11px;text-align:center;margin-top:22px;line-height:1.5;}
 </style>
 </head>
@@ -143,6 +150,11 @@
   <section class="panel active" id="panel-load" role="tabpanel" aria-labelledby="tab-load">
     <h1>Does this load actually pay?</h1>
     <p class="sub">Type the load, see what you really clear after fuel and the empty miles.</p>
+
+    <div class="hintbar" id="hintbar" style="display:none;">
+      <span>New here? The cost numbers start as an <b>estimate</b> — set yours in <b id="hint-link">My costs</b> so the verdict uses your real numbers.</span>
+      <button class="hintx" id="hintx" aria-label="Dismiss">&times;</button>
+    </div>
 
     <div class="grid">
       <label class="f">
@@ -264,11 +276,18 @@
       {name:"Phone, ELD & subscriptions",amount:150,  cad:"mo"},
     ],
     load:{rate:2400, loaded:1200, deadhead:150, diesel:5.00, mpg:6.5},
-    saved:[]
+    saved:[],
+    costsEdited:false,
+    hintDismissed:false
   };
 
-  var state = loadState() || JSON.parse(JSON.stringify(DEFAULTS));
+  var _loaded = loadState();
+  var state = _loaded || JSON.parse(JSON.stringify(DEFAULTS));
   if(!state.saved) state.saved = [];
+  // Returning users (who already have saved state) are assumed set up, so we
+  // don't call their costs "estimated" or show them the first-run hint.
+  if(_loaded && typeof state.costsEdited === "undefined") state.costsEdited = true;
+  if(_loaded && typeof state.hintDismissed === "undefined") state.hintDismissed = true;
 
   function loadState(){
     try{ var s = localStorage.getItem("loadcheck_v2"); return s ? JSON.parse(s) : null; }
@@ -309,24 +328,24 @@
       var nb = document.createElement("div"); nb.className = "namebox";
       var ni = document.createElement("input"); ni.type="text"; ni.value=it.name; ni.placeholder="Cost name";
       ni.setAttribute("aria-label","Cost name");
-      ni.addEventListener("input", function(){ state.items[i].name = ni.value; saveState(); });
+      ni.addEventListener("input", function(){ state.items[i].name = ni.value; state.costsEdited = true; renderCostSummary(); updateHint(); saveState(); });
       nb.appendChild(ni);
 
       var ab = document.createElement("div"); ab.className = "amtbox";
       var pre = document.createElement("span"); pre.className="pre"; pre.textContent="$";
       var ai = document.createElement("input"); ai.type="number"; ai.inputMode="decimal"; ai.step="0.01"; ai.value=it.amount;
       ai.setAttribute("aria-label","Amount");
-      ai.addEventListener("input", function(){ state.items[i].amount = ai.value; recompute(); saveState(); });
+      ai.addEventListener("input", function(){ state.items[i].amount = ai.value; state.costsEdited = true; recompute(); updateHint(); saveState(); });
       ab.appendChild(pre); ab.appendChild(ai);
 
       var sel = document.createElement("select"); sel.setAttribute("aria-label","How often");
       CADENCES.forEach(function(c){
         var o=document.createElement("option"); o.value=c.v; o.textContent=c.t; if(c.v===it.cad)o.selected=true; sel.appendChild(o);
       });
-      sel.addEventListener("change", function(){ state.items[i].cad = sel.value; recompute(); saveState(); });
+      sel.addEventListener("change", function(){ state.items[i].cad = sel.value; state.costsEdited = true; recompute(); updateHint(); saveState(); });
 
       var del = document.createElement("button"); del.className="del"; del.innerHTML="&times;"; del.title="Remove"; del.setAttribute("aria-label","Remove cost");
-      del.addEventListener("click", function(){ state.items.splice(i,1); renderItems(); recompute(); saveState(); });
+      del.addEventListener("click", function(){ state.items.splice(i,1); state.costsEdited = true; renderItems(); recompute(); updateHint(); saveState(); });
 
       row.appendChild(nb); row.appendChild(ab); row.appendChild(sel); row.appendChild(del);
       box.appendChild(row);
@@ -340,7 +359,21 @@
     $("r-month").textContent = fmtMoney(c.monthly);
     $("r-year").textContent  = fmtMoney(c.annual);
     $("othercpm-label").textContent = fmtRPM(c.cpm) + "/mi";
-    $("costsource").textContent = state.items.length ? "(your real number)" : "(add your costs)";
+    if(!state.items.length){
+      $("costsource").textContent = "(add your costs)";
+      $("cpm-sub").textContent = "before fuel · add your costs below";
+    } else if(!state.costsEdited){
+      $("costsource").textContent = "(estimated — tap to set yours)";
+      $("cpm-sub").textContent = "before fuel · estimated — edit below to make it yours";
+    } else {
+      $("costsource").textContent = "(your real number)";
+      $("cpm-sub").textContent = "before fuel · based on your numbers";
+    }
+  }
+
+  function updateHint(){
+    var hb = $("hintbar"); if(!hb) return;
+    hb.style.display = (!state.costsEdited && !state.hintDismissed) ? "flex" : "none";
   }
 
   // ---- load check ----
@@ -460,10 +493,10 @@
   $("op-miles").value = state.ops.miles; $("op-days").value = state.ops.days; $("op-loads").value = state.ops.loads;
   ["op-miles","op-days","op-loads"].forEach(function(id){
     var key = id.split("-")[1];
-    $(id).addEventListener("input", function(){ state.ops[key]=num($(id).value); recompute(); saveState(); });
+    $(id).addEventListener("input", function(){ state.ops[key]=num($(id).value); state.costsEdited = true; recompute(); updateHint(); saveState(); });
   });
   $("addbtn").addEventListener("click", function(){
-    state.items.push({name:"", amount:0, cad:"mo"}); renderItems(); recompute(); saveState();
+    state.items.push({name:"", amount:0, cad:"mo"}); state.costsEdited = true; renderItems(); recompute(); updateHint(); saveState();
   });
   $("savebtn").addEventListener("click", saveLoad);
 
@@ -480,9 +513,13 @@
   $("costline").addEventListener("click", function(){ selectTab("cost"); });
   $("costline").addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); selectTab("cost"); } });
 
+  $("hintx").addEventListener("click", function(){ state.hintDismissed = true; updateHint(); saveState(); });
+  $("hint-link").addEventListener("click", function(){ selectTab("cost"); });
+
   renderItems();
   recompute();
   renderSaved();
+  updateHint();
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "758442c7e1b7428b8f25f06207a6ddc8"}'></script><!-- End Cloudflare Web Analytics -->
