@@ -130,6 +130,10 @@
   .hintbar .hintx{background:transparent;border:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;padding:0 2px;flex-shrink:0;}
   .hintbar .hintx:hover{color:var(--ink);}
 
+  .chartcard{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:16px 14px 10px;margin-bottom:16px;}
+  .chartcard .ctitle{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:12px;text-align:center;}
+  .chartcard svg{display:block;width:100%;height:auto;}
+
   .foot{color:var(--faint);font-size:11px;text-align:center;margin-top:22px;line-height:1.5;}
 </style>
 </head>
@@ -244,6 +248,7 @@
     <h1>Loads you've logged</h1>
     <p class="sub">Every load you save adds up here — so you can see what you actually cleared over time.</p>
     <div id="saved-summary"></div>
+    <div id="saved-chart"></div>
     <div id="saved-list"></div>
     <p class="foot">Saved on this device only. Nothing leaves your phone.</p>
   </section>
@@ -439,10 +444,50 @@
     renderSaved();
   }
 
+  function renderChart(){
+    var box = $("saved-chart");
+    if(state.saved.length < 2){ box.innerHTML = ""; return; }
+    var HEX={"var(--green)":"#5BE58A","var(--amber)":"#F2B33D","var(--red)":"#F0563E"};
+    var data = state.saved.slice(-14);
+    var n = data.length;
+    var vals = data.map(function(s){ return s.ppm; });
+    var maxV = Math.max.apply(null, vals.concat([0]));
+    var minV = Math.min.apply(null, vals.concat([0]));
+    if(maxV === minV){ maxV = minV + 0.5; }
+    var range = maxV - minV;
+    var W=400, H=170, padT=18, padB=20, padL=8, padR=8;
+    var plotW=W-padL-padR, plotH=H-padT-padB;
+    var yOf=function(v){ return padT + plotH*((maxV - v)/range); };
+    var zeroY=yOf(0), slot=plotW/n, barW=Math.min(34, slot*0.62);
+    var svg="";
+    if(maxV >= 0.5){
+      var ry=yOf(0.5).toFixed(1);
+      svg += '<line x1="'+padL+'" y1="'+ry+'" x2="'+(W-padR)+'" y2="'+ry+'" stroke="#5BE58A" stroke-opacity="0.30" stroke-dasharray="2 4"/>';
+    }
+    svg += '<line x1="'+padL+'" y1="'+zeroY.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+zeroY.toFixed(1)+'" stroke="#2A2E37"/>';
+    for(var i=0;i<n;i++){
+      var v=vals[i], x=padL + i*slot + (slot-barW)/2;
+      var yTop=(v>=0?yOf(v):zeroY), h=Math.max(1.5, Math.abs(yOf(v)-zeroY));
+      svg += '<rect x="'+x.toFixed(1)+'" y="'+yTop.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" fill="'+(HEX[data[i].color]||"#F2B33D")+'"/>';
+    }
+    svg += '<text x="'+padL+'" y="'+(padT-6)+'" fill="#5A606C" font-size="9" font-family="monospace">'+fmtRPM(maxV)+'/mi</text>';
+    svg += '<text x="'+padL+'" y="'+(zeroY-3).toFixed(1)+'" fill="#8A909C" font-size="9" font-family="monospace">$0</text>';
+    if(minV < 0){
+      svg += '<text x="'+padL+'" y="'+(H-padB+12)+'" fill="#5A606C" font-size="9" font-family="monospace">'+fmtRPM(minV)+'</text>';
+    }
+    var cap = state.saved.length > 14 ? "Profit per mile · last 14 loads" : "Profit per mile · each load";
+    box.innerHTML =
+      '<div class="chartcard">'+
+        '<div class="ctitle">'+cap+'</div>'+
+        '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Profit per mile per saved load">'+svg+'</svg>'+
+      '</div>';
+  }
+
   function renderSaved(){
     var sum = $("saved-summary"), list = $("saved-list");
     if(!state.saved.length){
       sum.innerHTML = "";
+      $("saved-chart").innerHTML = "";
       list.innerHTML = '<div class="empty">No saved loads yet.<br>Run a load check and tap &ldquo;Save load.&rdquo;</div>';
       return;
     }
@@ -459,6 +504,8 @@
           '<div class="chip"><div class="ck">Avg $/mi</div><div class="cv" style="color:'+avgColor+';">'+fmtRPM(avg)+'</div></div>'+
         '</div>'+
       '</div>';
+
+    renderChart();
 
     var html = "";
     for(var i=state.saved.length-1; i>=0; i--){
@@ -522,5 +569,6 @@
   updateHint();
 })();
 </script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "758442c7e1b7428b8f25f06207a6ddc8"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
